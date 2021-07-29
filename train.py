@@ -5,7 +5,7 @@ from sklearn.metrics import confusion_matrix, f1_score, \
     accuracy_score, precision_score, recall_score, roc_auc_score
 import numpy as np
 from tqdm import tqdm
-from dataset_featurizer import MoleculeDataset
+from dataset import MoleculeDataset
 from model import GNN
 import mlflow.pytorch
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -15,8 +15,8 @@ def count_parameters(model):
 
 
 #%% Loading the dataset
-train_dataset = MoleculeDataset(root="data/", filename="HIV_train_oversampled.csv")
-test_dataset = MoleculeDataset(root="data/", filename="HIV_test.csv")
+train_dataset = MoleculeDataset(root="gnn-project/data/", filename="HIV_train_oversampled.csv")
+test_dataset = MoleculeDataset(root="gnn-project/data/", filename="HIV_test.csv")
 
 #%% Loading the model
 model = GNN(feature_size=train_dataset[0].x.shape[1]) 
