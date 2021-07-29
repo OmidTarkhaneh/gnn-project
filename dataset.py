@@ -20,11 +20,12 @@ but is kept to illustrate how to build a custom dataset in PyG.
 
 
 class MoleculeDataset(Dataset):
-    def __init__(self, root, transform=None, pre_transform=None):
+    def __init__(self, root, filename, transform=None, pre_transform=None):
         """
         root = Where the dataset should be stored. This folder is split
         into raw_dir (downloaded dataset) and processed_dir (processed data). 
         """
+        self.filename = filename
         super(MoleculeDataset, self).__init__(root, transform, pre_transform)
         
     @property
@@ -32,12 +33,14 @@ class MoleculeDataset(Dataset):
         """ If this file exists in raw_dir, the download is not triggered.
             (The download func. is not implemented here)  
         """
-        return 'HIV.csv'
+        return self.filename
 
     @property
     def processed_file_names(self):
         """ If these files are found in raw_dir, processing is skipped"""
-        return 'not_implemented.pt'
+        self.data = pd.read_csv(self.raw_paths[0])
+        self.data.index = self.data["index"]
+        return [f'data_{i}.pt' for i in list(self.data.index)]
 
     def download(self):
         pass
